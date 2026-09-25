@@ -1,0 +1,5 @@
+Metric,Proxmox VE,VMware Workstation
+Total Execution Time,10.0004,10.0008
+Total Events,17169,8760
+Events per Second,1716.69,875.72
+Average Latency,0.58,1.14
