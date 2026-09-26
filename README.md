@@ -370,3 +370,9 @@ Multi-metric comparison chart isolating Throughput (events/sec), Total Events, A
    - VMware Workstation exhibited average latency of **1.14 ms** and experienced severe peak latency spikes up to **8.83 ms** due to Windows host background processes and interrupt preemption.
 
 Detailed architectural analysis is available in [results/performance-analysis.md](results/performance-analysis.md).
+
+---
+
+## Author
+
+**Renuka Kagadal**
