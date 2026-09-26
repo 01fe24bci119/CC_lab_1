@@ -351,12 +351,6 @@ From [results/benchmark_results.csv](results/benchmark_results.csv):
 
 ---
 
-### Comparison Evidence Table Screenshot
-
-![Comparison Table](screenshots/comparison/01-hypervisor-performance-comparison.png)
-
----
-
 ### Graphical Performance Comparison
 
 Multi-metric comparison chart isolating Throughput (events/sec), Total Events, Average Latency (ms), and Test Duration (s):
