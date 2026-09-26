@@ -54,7 +54,7 @@ Both hypervisors were evaluated with virtual machines configured with identical 
 
 | Parameter | Type-1 Hypervisor (Proxmox VE) | Type-2 Hypervisor (VMware Workstation) |
 | :--- | :--- | :--- |
-| **VM Name / ID** | `b1-t1` (VM 117) | `CC-Experiment1-Type2` |
+| **VM Name / ID** | `CC-Experiment1-Type1` | `CC-Experiment1-Type2` |
 | **Guest OS** | Ubuntu 24.04.3 LTS (64-bit) | Ubuntu 22.04.5 LTS (64-bit) |
 | **CPU Allocation** | 2 vCPUs (1 Socket, 2 Cores/Socket) | 2 vCPUs (1 Socket, 2 Cores/Socket) |
 | **Memory Allocation** | 2048 MiB (2 GB RAM) | 2048 MiB (2 GB RAM) |
@@ -76,7 +76,7 @@ Both hypervisors were evaluated with virtual machines configured with identical 
 
 #### 2. Virtual Machine Creation (Create VM Wizard)
 - **Node**: Select assigned Proxmox server node (`Datacenter` &rarr; `Node`).
-- **General**: Specify VM ID (e.g. `117`) and Name (`b1-t1` or `CC-Experiment1-Type1`).
+- **General**: Specify VM ID (e.g. `117`) and Name (`CC-Experiment1-Type1`).
 - **OS**: Select *Use CD/DVD Disc Image File (ISO)* &rarr; Storage `local` &rarr; Ubuntu ISO (`ubuntu-24.04-desktop-amd64.iso`).
 - **System**: Retain standard hardware controllers (VirtIO SCSI).
 - **Disks**: Storage `local-lvm`, Disk Size `20 GB`, Bus `SCSI`.
@@ -202,7 +202,7 @@ sudo poweroff
 
 ## Type-1 Hypervisor – Proxmox VE
 
-### Mandatory Evidence Table
+### Evidence Table
 
 | Screenshot | Evidence |
 |---|---|
@@ -226,7 +226,7 @@ Proxmox VE 8.3.0 management dashboard showing node `admin1-HP-Pro-Tower-280-G9-E
 
 ### 2. Virtual Machine Configuration
 
-Final **Confirm** page of the Create VM wizard verifying VM `b1-t1` (VM ID 117) configuration: 2 Cores, 2048 MiB RAM, 20 GB SCSI disk (`local-lvm:20,iothread=on`), and Ubuntu 24.04.3 desktop ISO.
+Final **Confirm** page of the Create VM wizard verifying VM `CC-Experiment1-Type1` (VM ID 117) configuration: 2 Cores, 2048 MiB RAM, 20 GB SCSI disk (`local-lvm:20,iothread=on`), and Ubuntu 24.04.3 desktop ISO.
 
 ![Proxmox VM Configuration](screenshots/type1-proxmox/02-proxmox-vm-configuration.png)
 
@@ -234,7 +234,7 @@ Final **Confirm** page of the Create VM wizard verifying VM `b1-t1` (VM ID 117) 
 
 ### 3. Proxmox Virtual Machine Running
 
-Proxmox interface displaying VM 117 (`b1-t1`) visibly in the **running** state with an active green indicator, uptime `00:35:10`, CPU usage `0.75% of 2 CPU(s)`, memory usage `88.12% (1.76 GiB of 2.00 GiB)`, and bootdisk `20.00 GiB`.
+Proxmox interface displaying VM `CC-Experiment1-Type1` (VM ID 117) visibly in the **running** state with an active green indicator, uptime `00:35:10`, CPU usage `0.75% of 2 CPU(s)`, memory usage `88.12% (1.76 GiB of 2.00 GiB)`, and bootdisk `20.00 GiB`.
 
 ![Proxmox VM Running](screenshots/type1-proxmox/03-proxmox-vm-running.png)
 
@@ -242,7 +242,7 @@ Proxmox interface displaying VM 117 (`b1-t1`) visibly in the **running** state w
 
 ### 4. Ubuntu Running in Proxmox Console
 
-Ubuntu 24.04.3 LTS running inside the Proxmox QEMU/noVNC console (`QEMU (b1-t1) - noVNC`) with GNOME desktop environment and terminal session.
+Ubuntu 24.04.3 LTS running inside the Proxmox QEMU/noVNC console (`QEMU (CC-Experiment1-Type1) - noVNC`) with GNOME desktop environment and terminal session.
 
 ![Ubuntu Running in Proxmox Console](screenshots/type1-proxmox/04-proxmox-ubuntu-console.png)
 
@@ -250,7 +250,7 @@ Ubuntu 24.04.3 LTS running inside the Proxmox QEMU/noVNC console (`QEMU (b1-t1) 
 
 ### 5. CPU and Memory Configuration
 
-Ubuntu terminal system verification displaying `hostnamectl` showing static hostname `b1-t1-Standard-PC-i440FX-PIIX-1996`, KVM virtualization, OS Ubuntu 24.04.3 LTS, Linux kernel 6.14.0-27-generic, and architecture x86-64.
+Ubuntu terminal system verification displaying `hostnamectl` showing KVM virtualization, OS Ubuntu 24.04.3 LTS, Linux kernel 6.14.0-27-generic, and architecture x86-64.
 
 ![Proxmox System Configuration](screenshots/type1-proxmox/05-proxmox-system-configuration.png)
 
@@ -258,7 +258,7 @@ Ubuntu terminal system verification displaying `hostnamectl` showing static host
 
 ### 6. Sysbench Performance Result
 
-Execution of CPU prime number computation benchmark (`sysbench cpu --cpu-max-prime=20000 run`) on Type-1 Proxmox VM `b1-t1`. The Proxmox CPU utilization monitor captures the benchmark execution spike reaching **~87%** CPU utilization (at 10:18).
+Execution of CPU prime number computation benchmark (`sysbench cpu --cpu-max-prime=20000 run`) on Type-1 Proxmox VM `CC-Experiment1-Type1`. The Proxmox CPU utilization monitor captures the benchmark execution spike reaching **~87%** CPU utilization (at 10:18).
 
 **Benchmark Measurements**:
 - **Events per second**: `1716.69 ev/s`
@@ -275,7 +275,7 @@ Execution of CPU prime number computation benchmark (`sysbench cpu --cpu-max-pri
 
 ### 7. Proxmox Resource Monitoring
 
-Proxmox VE real-time memory resource utilization graph tracking RAM allocation for VM 117 (`b1-t1`) reaching 1.75 GiB out of 2.00 GiB allocated memory.
+Proxmox VE real-time memory resource utilization graph tracking RAM allocation for VM `CC-Experiment1-Type1` (VM ID 117) reaching 1.75 GiB out of 2.00 GiB allocated memory.
 
 ![Proxmox Resource Monitoring](screenshots/type1-proxmox/07-proxmox-resource-monitoring.png)
 
@@ -283,7 +283,7 @@ Proxmox VE real-time memory resource utilization graph tracking RAM allocation f
 
 ## Type-2 Hypervisor – VMware Workstation
 
-### Mandatory Evidence Table
+### Evidence Table
 
 | Screenshot | Evidence |
 |---|---|
