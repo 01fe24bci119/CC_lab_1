@@ -1,14 +1,20 @@
-# Performance Analysis of Type-1 vs Type-2 Hypervisors
+# Performance Analysis of Type-1 (Proxmox VE) vs Type-2 (VMware Workstation) Hypervisors
 
 ## Experiment Overview
 
-This repository documents an empirical performance benchmark and comparative architectural evaluation between a **Type-1 Bare-Metal Hypervisor (Proxmox VE)** and a **Type-2 Hosted Hypervisor (VMware Workstation)**.
+This repository contains the empirical benchmark data, virtualization evidence, performance visualizations, and comparative architectural analysis for:
+- **Type-1 Hypervisor (Bare-Metal)**: Proxmox Virtual Environment (VE) 8.3.0
+- **Type-2 Hypervisor (Hosted)**: VMware Workstation
 
-Virtual machines configured with identical compute resources (**2 vCPU**, **2 GB RAM**, **20 GB Disk**, **Ubuntu 22.04 LTS**) were tested using the `sysbench` CPU benchmark (`sysbench cpu --cpu-max-prime=20000 run`).
+Both hypervisors were evaluated with virtual machines configured with identical compute specifications:
+- **CPU**: 2 vCPUs
+- **Memory**: 2 GB RAM (2048 MiB)
+- **Disk**: 20 GB Virtual Storage
+- **Benchmark Tool**: Sysbench (`sysbench cpu --cpu-max-prime=20000 run`)
 
 ---
 
-## Repository Structure
+## Repository Directory Structure
 
 ```text
 .
@@ -46,16 +52,16 @@ Virtual machines configured with identical compute resources (**2 vCPU**, **2 GB
 
 ## Standard Virtual Machine Configuration
 
-To ensure rigorous benchmarking fairness, both virtual machines use identical resource allocations:
-
-| Resource | Configuration Specification |
-| :--- | :--- |
-| **Guest Operating System** | Ubuntu 22.04 LTS (64-bit) |
-| **Virtual CPUs (vCPU)** | 2 vCPUs (1 Socket, 2 Cores/Socket) |
-| **Memory (RAM)** | 2 GB (2048 MiB) |
-| **Storage (Disk)** | 20 GB Virtual Disk |
-| **Benchmark Tool** | Sysbench (CPU workload) |
-| **Benchmark Command** | `sysbench cpu --cpu-max-prime=20000 run` |
+| Parameter | Type-1 Hypervisor (Proxmox VE) | Type-2 Hypervisor (VMware Workstation) |
+| :--- | :--- | :--- |
+| **VM Name / ID** | `b1-t1` (VM 117) | `CC-Experiment1-Type2` |
+| **Guest OS** | Ubuntu 24.04.3 LTS (64-bit) | Ubuntu 22.04.5 LTS (64-bit) |
+| **CPU Allocation** | 2 vCPUs (1 Socket, 2 Cores/Socket) | 2 vCPUs (1 Socket, 2 Cores/Socket) |
+| **Memory Allocation** | 2048 MiB (2 GB RAM) | 2048 MiB (2 GB RAM) |
+| **Storage Allocation** | 20 GB SCSI (`local-lvm:20,iothread=on`) | 20 GB SCSI Hard Disk |
+| **Virtualization Backend** | KVM / QEMU (Bare-Metal) | VMware Virtual Platform (Hosted) |
+| **Benchmark Tool** | Sysbench 1.0.x | Sysbench 1.0.20 |
+| **Workload Command** | `sysbench cpu --cpu-max-prime=20000 run` | `sysbench cpu --cpu-max-prime=20000 run` |
 
 ---
 
@@ -77,15 +83,15 @@ To ensure rigorous benchmarking fairness, both virtual machines use identical re
 
 ### 1. Proxmox VE Dashboard
 
-The Proxmox VE 8.3.0 web interface after successful authentication (`root@pam`), displaying the Datacenter hierarchy, node `admin1-HP-Pro-Tower-280-G9-E-PCI-Desktop-PC`, server uptime (13 days), memory, CPU, and disk usage.
+Proxmox VE 8.3.0 management dashboard showing node `admin1-HP-Pro-Tower-280-G9-E-PCI-Desktop-PC`, server CPU specifications (28 x Intel Core i7-14700), RAM usage, HD space, Linux kernel 6.8.12-4-pve, and node uptime.
 
-![Proxmox Dashboard](screenshots/type1-proxmox/01-proxmox-dashboard.png)
+![Proxmox VE Dashboard](screenshots/type1-proxmox/01-proxmox-dashboard.png)
 
 ---
 
 ### 2. Virtual Machine Configuration
 
-The final confirmation page of the Create VM wizard verifying the resource specifications for experiment VM `CC-Experiment1-Type1` (VM ID 106): 2 Cores, 2048 MiB RAM, 20 GB SCSI disk (`local-lvm:20`), and Ubuntu 22.04 ISO.
+Final **Confirm** page of the Create VM wizard verifying VM `b1-t1` (VM ID 117) configuration: 2 Cores, 2048 MiB RAM, 20 GB SCSI disk (`local-lvm:20,iothread=on`), and Ubuntu 24.04.3 desktop ISO.
 
 ![Proxmox VM Configuration](screenshots/type1-proxmox/02-proxmox-vm-configuration.png)
 
@@ -93,7 +99,7 @@ The final confirmation page of the Create VM wizard verifying the resource speci
 
 ### 3. Proxmox Virtual Machine Running
 
-Proxmox management interface displaying VM 106 (`CC-Experiment1-Type1`) visibly in the **running** state with an active green indicator, 00:00:08 uptime, and active CPU usage.
+Proxmox interface displaying VM 117 (`b1-t1`) visibly in the **running** state with an active green indicator, uptime `00:35:10`, CPU usage `0.75% of 2 CPU(s)`, memory usage `88.12% (1.76 GiB of 2.00 GiB)`, and bootdisk `20.00 GiB`.
 
 ![Proxmox VM Running](screenshots/type1-proxmox/03-proxmox-vm-running.png)
 
@@ -101,7 +107,7 @@ Proxmox management interface displaying VM 106 (`CC-Experiment1-Type1`) visibly 
 
 ### 4. Ubuntu Running in Proxmox Console
 
-The Ubuntu 22.04 desktop and terminal environment running inside the Proxmox QEMU/noVNC console (`QEMU (CC-Experiment1-Type1) - noVNC`), confirming a successful guest boot.
+Ubuntu 24.04.3 LTS running inside the Proxmox QEMU/noVNC console (`QEMU (b1-t1) - noVNC`) with GNOME desktop environment and terminal session.
 
 ![Ubuntu Running in Proxmox Console](screenshots/type1-proxmox/04-proxmox-ubuntu-console.png)
 
@@ -109,21 +115,18 @@ The Ubuntu 22.04 desktop and terminal environment running inside the Proxmox QEM
 
 ### 5. CPU and Memory Configuration
 
-Guest terminal system information verifying 2 vCPUs via `lscpu` (KVM full virtualization, QEMU Virtual CPU) and 2 GB total RAM (1.9 GiB) via `free -h`.
+Ubuntu terminal system verification displaying `hostnamectl` showing static hostname `b1-t1-Standard-PC-i440FX-PIIX-1996`, KVM virtualization, OS Ubuntu 24.04.3 LTS, Linux kernel 6.14.0-27-generic, and architecture x86-64.
 
-![CPU and Memory Configuration](screenshots/type1-proxmox/05-proxmox-system-configuration.png)
+![Proxmox System Configuration](screenshots/type1-proxmox/05-proxmox-system-configuration.png)
 
 ---
 
 ### 6. Sysbench Performance Result
 
-Execution of `sysbench cpu --cpu-max-prime=20000 run` on the Type-1 Ubuntu guest VM.
+Execution of CPU prime number computation benchmark (`sysbench cpu --cpu-max-prime=20000 run`) on Type-1 Proxmox VM `b1-t1`.
 
-> [!NOTE]
-> **Action Required**: The Sysbench output screenshot was not present in the provided ZIP archive and is clearly marked with a placeholder below. Replace this placeholder with the actual console screenshot containing the recorded values.
-
-**Recorded Benchmark Values**:
-- **Events per second**: `1716.69`
+**Benchmark Measurements**:
+- **Events per second**: `1716.69 ev/s`
 - **Total execution time**: `10.0004 s`
 - **Total number of events**: `17169`
 - **Average Latency**: `0.58 ms`
@@ -137,7 +140,7 @@ Execution of `sysbench cpu --cpu-max-prime=20000 run` on the Type-1 Ubuntu guest
 
 ### 7. Proxmox Resource Monitoring
 
-The Proxmox VE VM Summary monitoring view showing real-time resource utilization (CPU Usage: 49.80%, Memory Usage: 1.60%, Bootdisk: 20.00 GiB) and live CPU usage graph for VM 106.
+Proxmox VE real-time resource utilization graphs showing CPU usage spiking to **~87%** during benchmark execution (at 10:18), and memory usage graph tracking RAM allocation reaching 1.75 GiB.
 
 ![Proxmox Resource Monitoring](screenshots/type1-proxmox/07-proxmox-resource-monitoring.png)
 
@@ -158,7 +161,7 @@ The Proxmox VE VM Summary monitoring view showing real-time resource utilization
 
 ### 1. VMware Virtual Machine Configuration
 
-Hardware configuration in VMware Workstation showing 2 vCPU processors, 2 GB RAM, and 20 GB virtual disk for Ubuntu 22.04 LTS.
+VMware Workstation **Virtual Machine Settings** dialog verifying hardware resources: 2 Processors (1 processor, 2 cores/processor), 2 GB RAM, 20 GB SCSI Hard Disk, and Ubuntu ISO.
 
 ![VMware VM Configuration](screenshots/type2-vmware/01-vmware-vm-configuration.png)
 
@@ -166,7 +169,7 @@ Hardware configuration in VMware Workstation showing 2 vCPU processors, 2 GB RAM
 
 ### 2. VMware Virtual Machine Running
 
-Ubuntu guest operating system successfully booted and running inside VMware Workstation.
+Ubuntu 22.04.5 LTS booted and running inside VMware Workstation (`CC-Experiment1-Type2`), with terminal session executing `hostnamectl` and `lscpu` verifying 2 vCPUs on a 12th Gen Intel Core i5-12450HX.
 
 ![VMware VM Running](screenshots/type2-vmware/02-vmware-vm-running.png)
 
@@ -174,7 +177,7 @@ Ubuntu guest operating system successfully booted and running inside VMware Work
 
 ### 3. VMware CPU and Memory Configuration
 
-Ubuntu guest terminal execution displaying `lscpu` and `free -h` output confirming identical 2 vCPU and 2 GB memory allocation under VMware.
+Ubuntu terminal system verification displaying `free -h` (`Mem: total 1.9Gi`, `used 849Mi`, `free 295Mi`), `df -h` (`/dev/sda3 20G 12G 6.4G 65% /`), and VMware virtualization features from `lscpu`.
 
 ![VMware System Configuration](screenshots/type2-vmware/03-vmware-system-configuration.png)
 
@@ -182,14 +185,14 @@ Ubuntu guest terminal execution displaying `lscpu` and `free -h` output confirmi
 
 ### 4. VMware Sysbench Performance Result
 
-Execution output of `sysbench cpu --cpu-max-prime=20000 run` under VMware Workstation:
-- **Total Execution Time**: `10.0008 s`
-- **Total Events**: `8760`
-- **Events per Second**: `875.72`
+Execution output of `sysbench cpu --cpu-max-prime=20000 run` inside VMware Workstation:
+- **Events per second**: `875.72 ev/s`
+- **Total execution time**: `10.0008 s`
+- **Total number of events**: `8760`
 - **Average Latency**: `1.14 ms`
 - **Minimum Latency**: `0.94 ms`
 - **Maximum Latency**: `8.83 ms`
-- **95th Percentile**: `1.82 ms`
+- **95th Percentile Latency**: `1.82 ms`
 
 ![VMware Sysbench Result](screenshots/type2-vmware/04-vmware-sysbench-result.png)
 
@@ -197,19 +200,19 @@ Execution output of `sysbench cpu --cpu-max-prime=20000 run` under VMware Workst
 
 ## Final Performance Comparison
 
-### Benchmark Data Table
+### Benchmark Comparison Data
 
 From [results/benchmark_results.csv](results/benchmark_results.csv):
 
 | Metric | Proxmox VE (Type-1) | VMware Workstation (Type-2) | Performance Delta / Impact |
 | :--- | :--- | :--- | :--- |
-| **Total Execution Time** | `10.0004 s` | `10.0008 s` | Equal duration benchmark window |
-| **Total Events** | `17169` | `8760` | **+96.03%** more events on Type-1 |
-| **Events per Second** | `1716.69` | `875.72` | **+96.03%** throughput advantage on Type-1 |
-| **Average Latency** | `0.58 ms` | `1.14 ms` | **49.12% lower** latency on Type-1 |
+| **Total Execution Time** | `10.0004 s` | `10.0008 s` | Equal duration benchmark window (~10s) |
+| **Total Events** | `17,169` | `8,760` | **+96.03%** more events processed on Type-1 |
+| **Events per Second** | `1,716.69 ev/s` | `875.72 ev/s` | **+96.03%** higher computational throughput |
+| **Average Latency** | `0.58 ms` | `1.14 ms` | **49.12% lower** response latency on Type-1 |
 | **Minimum Latency** | `0.57 ms` | `0.94 ms` | **39.36% lower** baseline latency |
-| **Maximum Latency** | `2.78 ms` | `8.83 ms` | **68.52% lower** peak latency spike |
-| **95th Percentile** | `0.65 ms` | `1.82 ms` | **64.29% tighter** tail latency |
+| **Maximum Latency** | `2.78 ms` | `8.83 ms` | **68.52% lower** peak latency spike on Type-1 |
+| **95th Percentile Latency** | `0.65 ms` | `1.82 ms` | **64.29% tighter** tail latency distribution |
 
 ---
 
@@ -219,18 +222,22 @@ From [results/benchmark_results.csv](results/benchmark_results.csv):
 
 ---
 
-### Graphical Comparison
+### Graphical Performance Comparison
 
-Multi-metric performance comparison chart featuring separated axes for Throughput (events/sec), Computational Capacity (total events), Latency Profile (ms), and Test Duration (s):
+Multi-metric comparison chart isolating Throughput (events/sec), Total Events, Average Latency (ms), and Test Duration (s):
 
 ![Performance Comparison Graph](graphs/performance_comparison.png)
 
 ---
 
-## Key Findings and Conclusion
+## Architectural Findings & Analysis Summary
 
-1. **Virtualization Efficiency**: Proxmox VE (Type-1) executes CPU-intensive workloads nearly twice as fast as VMware Workstation (+96.03% events/sec) due to direct hardware scheduling via KVM kernel extensions without host OS overhead.
-2. **Latency & Predictability**: The Type-1 hypervisor demonstrated superior latency consistency (0.58 ms average, 0.65 ms 95th percentile) compared to the Type-2 hypervisor (1.14 ms average, 1.82 ms 95th percentile), which suffered from Windows host OS preemption and thread contention.
-3. **Suitability**: Type-1 hypervisors are recommended for enterprise workloads, database servers, and private cloud infrastructure where maximum performance and predictable latency are essential. Type-2 hypervisors remain suitable for desktop development, testing, and isolated sandboxing.
+1. **Virtualization Overhead & Throughput**:
+   - **Proxmox VE (Type-1)** delivers **+96.03% higher event throughput** than VMware Workstation because KVM executes guest CPU instructions directly on the physical processor using hardware virtualization extensions (Intel VT-x / AMD-V) with zero host OS mediation.
+   - **VMware Workstation (Type-2)** incurs significant overhead from traversing the host Windows OS kernel, graphics subsystems, and host thread scheduler.
+
+2. **Latency & Execution Determinism**:
+   - Proxmox VE demonstrated average latency of **0.58 ms** and 95th percentile latency of **0.65 ms**, with maximum latency capped at **2.78 ms**.
+   - VMware Workstation exhibited average latency of **1.14 ms** and experienced severe peak latency spikes up to **8.83 ms** due to Windows host background processes and interrupt preemption.
 
 Detailed architectural analysis is available in [results/performance-analysis.md](results/performance-analysis.md).
