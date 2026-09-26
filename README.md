@@ -14,42 +14,6 @@ Both hypervisors were evaluated with virtual machines configured with identical 
 
 ---
 
-## Repository Directory Structure
-
-```text
-.
-├── .gitignore
-├── README.md
-│
-├── screenshots/
-│   ├── type1-proxmox/
-│   │   ├── 01-proxmox-dashboard.png
-│   │   ├── 02-proxmox-vm-configuration.png
-│   │   ├── 03-proxmox-vm-running.png
-│   │   ├── 04-proxmox-ubuntu-console.png
-│   │   ├── 05-proxmox-system-configuration.png
-│   │   ├── 06-proxmox-sysbench-result.png
-│   │   └── 07-proxmox-resource-monitoring.png
-│   │
-│   ├── type2-vmware/
-│   │   ├── 01-vmware-vm-configuration.png
-│   │   ├── 02-vmware-vm-running.png
-│   │   ├── 03-vmware-system-configuration.png
-│   │   └── 04-vmware-sysbench-result.png
-│   │
-│   └── comparison/
-│       └── 01-hypervisor-performance-comparison.png
-│
-├── results/
-│   ├── performance-analysis.md
-│   └── benchmark_results.csv
-│
-└── graphs/
-    └── performance_comparison.png
-```
-
----
-
 ## Standard Virtual Machine Configuration
 
 | Parameter | Type-1 Hypervisor (Proxmox VE) | Type-2 Hypervisor (VMware Workstation) |
@@ -370,6 +334,42 @@ Multi-metric comparison chart isolating Throughput (events/sec), Total Events, A
    - VMware Workstation exhibited average latency of **1.14 ms** and experienced severe peak latency spikes up to **8.83 ms** due to Windows host background processes and interrupt preemption.
 
 Detailed architectural analysis is available in [results/performance-analysis.md](results/performance-analysis.md).
+
+---
+
+## Repository Directory Structure
+
+```text
+.
+├── .gitignore
+├── README.md
+│
+├── screenshots/
+│   ├── type1-proxmox/
+│   │   ├── 01-proxmox-dashboard.png
+│   │   ├── 02-proxmox-vm-configuration.png
+│   │   ├── 03-proxmox-vm-running.png
+│   │   ├── 04-proxmox-ubuntu-console.png
+│   │   ├── 05-proxmox-system-configuration.png
+│   │   ├── 06-proxmox-sysbench-result.png
+│   │   └── 07-proxmox-resource-monitoring.png
+│   │
+│   ├── type2-vmware/
+│   │   ├── 01-vmware-vm-configuration.png
+│   │   ├── 02-vmware-vm-running.png
+│   │   ├── 03-vmware-system-configuration.png
+│   │   └── 04-vmware-sysbench-result.png
+│   │
+│   └── comparison/
+│       └── 01-hypervisor-performance-comparison.png
+│
+├── results/
+│   ├── performance-analysis.md
+│   └── benchmark_results.csv
+│
+└── graphs/
+    └── performance_comparison.png
+```
 
 ---
 
