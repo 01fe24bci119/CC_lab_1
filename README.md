@@ -258,7 +258,7 @@ Ubuntu terminal system verification displaying `hostnamectl` showing static host
 
 ### 6. Sysbench Performance Result
 
-Execution of CPU prime number computation benchmark (`sysbench cpu --cpu-max-prime=20000 run`) on Type-1 Proxmox VM `b1-t1`.
+Execution of CPU prime number computation benchmark (`sysbench cpu --cpu-max-prime=20000 run`) on Type-1 Proxmox VM `b1-t1`. The Proxmox CPU utilization monitor captures the benchmark execution spike reaching **~87%** CPU utilization (at 10:18).
 
 **Benchmark Measurements**:
 - **Events per second**: `1716.69 ev/s`
@@ -275,7 +275,7 @@ Execution of CPU prime number computation benchmark (`sysbench cpu --cpu-max-pri
 
 ### 7. Proxmox Resource Monitoring
 
-Proxmox VE real-time resource utilization graphs showing CPU usage spiking to **~87%** during benchmark execution (at 10:18), and memory usage graph tracking RAM allocation reaching 1.75 GiB.
+Proxmox VE real-time memory resource utilization graph tracking RAM allocation for VM 117 (`b1-t1`) reaching 1.75 GiB out of 2.00 GiB allocated memory.
 
 ![Proxmox Resource Monitoring](screenshots/type1-proxmox/07-proxmox-resource-monitoring.png)
 
